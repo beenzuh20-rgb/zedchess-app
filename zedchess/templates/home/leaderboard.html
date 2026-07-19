@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard · ZedChess{% endblock %}
+{% block content %}
+<section class="content">
+  <div class="card">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+      <a href="?window=global" class="btn btn-sm {% if window=='global' %}btn-primary{% else %}btn-ghost{% endif %}">Global</a>
+      <a href="?window=weekly" class="btn btn-sm {% if window=='weekly' %}btn-primary{% else %}btn-ghost{% endif %}">Weekly</a>
+      <a href="?window=monthly" class="btn btn-sm {% if window=='monthly' %}btn-primary{% else %}btn-ghost{% endif %}">Monthly</a>
+    </div>
+    <table class="table">
+      <thead><tr><th>#</th><th>Player</th><th>Rating</th><th>Peak</th><th>W/L/D</th><th>Games</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><a href="{{ url_for('auth.profile', username=u.username) }}">{{ u.username }}</a></td>
+          <td class="text-gold">{{ u.rating|int }}</td>
+          <td>{{ u.rating_peak|int }}</td>
+          <td class="text-dim">{{ u.wins }}/{{ u.losses }}/{{ u.draws }}</td>
+          <td>{{ u.games_played }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

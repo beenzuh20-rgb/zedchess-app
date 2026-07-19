@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Rating Graph · ZedChess{% endblock %}
+{% block content %}
+<section class="content" style="max-width:820px;">
+  <div class="card">
+    <div class="section-title"><i class="fa-solid fa-chart-line"></i> {{ user.username }}'s Rating</div>
+    <p class="text-dim">Current: <b class="text-gold">{{ user.rating|int }}</b> · Peak: <b>{{ user.rating_peak|int }}</b></p>
+    <canvas id="ratingChart" height="120"></canvas>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  const points = {{ points|tojson }};
+  const ctx = document.getElementById('ratingChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: points.map(p => p.t.slice(0, 10)),
+      datasets: [{
+        label: 'Rating',
+        data: points.map(p => p.rating),
+        borderColor: '#6aa9ff',
+        backgroundColor: 'rgba(106,169,255,0.15)',
+        fill: true, tension: 0.3, pointRadius: 3,
+      }]
+    },
+    options: { scales: { y: { beginAtZero: false } } }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ user.username }} · Profile{% endblock %}
+{% block content %}
+<section class="content grid grid-3">
+  <div class="card" style="grid-column: span 1;">
+    <div style="text-align:center;">
+      <img class="avatar-sm" style="width:96px;height:96px;" src="{{ user.avatar or url_for('static', filename='img/default-avatar.svg') }}">
+      <h2 style="margin:10px 0 2px;">{{ user.username }}</h2>
+      <div class="text-dim">{{ user.email }}</div>
+      {% if user.online %}<span class="badge badge-online">Online</span>{% else %}<span class="badge badge-offline">Offline</span>{% endif %}
+    </div>
+    <hr style="border-color:var(--border);">
+    <div class="stat-row"><span class="text-dim">Rating</span><b class="text-gold">{{ user.rating|int }}</b></div>
+    <div class="stat-row"><span class="text-dim">Peak</span><b>{{ user.rating_peak|int }}</b></div>
+    <div class="stat-row"><span class="text-dim">Wins</span><b style="color:var(--green)">{{ user.wins }}</b></div>
+    <div class="stat-row"><span class="text-dim">Losses</span><b style="color:var(--red)">{{ user.losses }}</b></div>
+    <div class="stat-row"><span class="text-dim">Draws</span><b>{{ user.draws }}</b></div>
+    <div class="stat-row"><span class="text-dim">Games</span><b>{{ user.games_played }}</b></div>
+    <div class="stat-row"><span class="text-dim">Earnings</span><b class="text-gold">{{ '%.2f'|format(user.wallet.total_earned if user.wallet else 0) }}</b></div>
+    {% if user.bio %}<p class="text-dim" style="margin-top:10px;">{{ user.bio }}</p>{% endif %}
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
+      {% if user.id == current_user.id %}
+        <a href="{{ url_for('auth.profile_edit') }}" class="btn btn-sm">Edit Profile</a>
+      {% elif not is_friend %}
+        <form method="POST" action="{{ url_for('lobby.add_friend', user_id=user.id) }}" style="margin:0;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-sm btn-primary">Add Friend</button>
+        </form>
+      {% else %}
+        <span class="badge badge-online">Friends</span>
+      {% endif %}
+      <a href="{{ url_for('home.rating_graph_page', username=user.username) }}" class="btn btn-sm btn-ghost">Rating Graph</a>
+    </div>
+  </div>
+
+  <div class="card" style="grid-column: span 2;">
+    <div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Games</div>
+    <table class="table">
+      <thead><tr><th>Result</th><th>Time</th><th>Stake</th><th>Termination</th><th>When</th></tr></thead>
+      <tbody>
+      {% for g in recent %}
+        <tr>
+          <td>
+            {% if g.result == 'white' and g.white_id == user.id %}<span style="color:var(--green)">Win</span>
+            {% elif g.result == 'black' and g.black_id == user.id %}<span style="color:var(--green)">Win</span>
+            {% elif g.result == 'draw' %}<span class="text-dim">Draw</span>
+            {% else %}<span style="color:var(--red)">Loss</span>{% endif %}
+          </td>
+          <td>{{ g.time_control }}</td>
+          <td class="text-gold">K{{ g.stake }}</td>
+          <td class="text-dim">{{ g.termination or '—' }}</td>
+          <td class="text-dim">{{ g.finished_at.strftime('%Y-%m-%d') if g.finished_at else '—' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="text-dim">No games yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+<style>.stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);}</style>
+{% endblock %}

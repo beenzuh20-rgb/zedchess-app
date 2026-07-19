@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Profile</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>My Profile</h2>
+
+<img id="avatar" width="120" height="120"
+style="border-radius:50%; object-fit:cover; border:2px solid #4cafef;">
+<input type="file" id="avatarInput" accept="image/*">
+<h3 id="displayName">Loading...</h3>
+
+<p>Rating: 1200</p>
+<p>Games Played: 0</p>
+<p>Wins: 0</p>
+<p>Losses: 0</p>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+<script>
+
+// ================= LOAD USER =================
+let username = localStorage.getItem("username");
+
+if(!username){
+    // not logged in → send to login page
+    window.location.href = "login.html";
+} else {
+    document.getElementById("displayName").innerText = username;
+}
+
+// ================= LOGOUT =================
+function logout(){
+    localStorage.removeItem("username");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

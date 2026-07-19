@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ZedChess{% endblock %}</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  {% if current_user.is_authenticated %}
+  <header class="topbar glass">
+    <a class="brand" href="{{ url_for('home.index') }}">
+      <img class="site-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="ZedChess">
+      <span class="brand-title"><span class="brand-zed">ZED</span><span class="brand-chess">CHESS</span></span>
+    </a>
+    <nav class="nav">
+      <a href="{{ url_for('lobby.index') }}" class="nav-link"><i class="fa-solid fa-house"></i> Lobby</a>
+      <a href="{{ url_for('home.leaderboard_page') }}" class="nav-link"><i class="fa-solid fa-trophy"></i> Ranking</a>
+      <a href="{{ url_for('wallet.index') }}" class="nav-link"><i class="fa-solid fa-wallet"></i> Wallet</a>
+      {% if current_user.is_admin %}
+      <a href="{{ url_for('admin.dashboard') }}" class="nav-link admin"><i class="fa-solid fa-shield"></i> Admin</a>
+      {% endif %}
+    </nav>
+    <div class="topbar-right">
+      <div class="live-challenges-wrap">
+        <button class="icon-btn live-challenges-btn" title="Live challenges">
+          <i class="fa-solid fa-swords"></i>
+          <span id="liveChallengesCount" class="live-count">0</span>
+        </button>
+        <div id="globalChallenges" class="live-challenges-panel glass"></div>
+      </div>
+      <span class="balance-pill" title="Available balance">
+        <i class="fa-solid fa-coins"></i> <span id="navBalance">{{ '%.2f'|format(current_user.balance) }}</span>
+      </span>
+      <a class="avatar-link" href="{{ url_for('auth.profile', username=current_user.username) }}">
+        <img class="avatar-sm" src="{{ current_user.avatar or url_for('static', filename='img/default-avatar.svg') }}" alt="">
+        <span class="uname">{{ current_user.username }}</span>
+      </a>
+      <button id="themeToggle" class="icon-btn" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+      <a href="{{ url_for('auth.logout') }}" class="icon-btn" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+    </div>
+  </header>
+  {% endif %}
+
+  <main class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-stack">
+        {% for cat, msg in messages %}
+        <div class="flash flash-{{ cat }}"><i class="fa-solid fa-circle-info"></i> {{ msg }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <span>&copy; {{ now.year if now else "2026" }} ZedChess</span>
+    <nav class="footer-links">
+      <a href="{{ url_for('legal.terms') }}">Terms</a>
+      <a href="{{ url_for('legal.privacy') }}">Privacy</a>
+      <a href="{{ url_for('legal.community') }}">Community</a>
+    </nav>
+  </footer>
+
+  <!-- Global realtime client -->
+  {% if current_user.is_authenticated %}
+  <div id="toast-stack" class="toast-stack"></div>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/realtime.js') }}"></script>
+  {% endif %}
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

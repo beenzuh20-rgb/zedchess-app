@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Search · ZedChess{% endblock %}
+{% block content %}
+<section class="content" style="max-width:700px;">
+  <div class="card">
+    <div class="section-title"><i class="fa-solid fa-magnifying-glass"></i> Search Players</div>
+    <form method="GET" action="{{ url_for('lobby.search') }}">
+      <input name="q" value="{{ q }}" placeholder="Username…">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+    <div style="margin-top:14px;">
+      {% for u in results %}
+        <div class="online-user">
+          <img class="avatar-sm" src="{{ u.avatar or url_for('static', filename='img/default-avatar.svg') }}">
+          <a href="{{ url_for('auth.profile', username=u.username) }}"><strong>{{ u.username }}</strong></a>
+          <span class="text-dim">({{ u.rating|int }})</span>
+          <form method="POST" action="{{ url_for('lobby.add_friend', user_id=u.id) }}" style="margin-left:auto;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm">Add Friend</button>
+          </form>
+        </div>
+      {% else %}
+        <p class="text-dim">{% if q %}No players found for "{{ q }}".{% else %}Type to search.{% endif %}</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

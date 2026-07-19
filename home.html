@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ZedChess Lobby</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<script src="service-worker-cleanup.js"></script>
+
+<div class="container">
+
+<h1>♟ ZedChess</h1>
+
+<h3 id="welcome"></h3>
+
+<button id="playComputerBtn">🤖 Play vs Computer</button>
+<button id="createRoomBtn">🌍 Create Online Room</button>
+<button id="joinRoomBtn">🔗 Join Room</button>
+<button id="findMatchBtn">⚔ Find Match</button>
+<button id="logoutBtn">🚪 Logout</button>
+
+<input id="roomInput" placeholder="Enter Room ID">
+
+<p id="matchStatus">Idle</p>
+
+</div>
+
+<!-- Matchmaking Logic -->
+<script type="module" src="matchmaking.js"></script>
+
+<!-- Lobby Controller -->
+<script type="module">
+import { getCurrentUser, getCurrentUserData, setCurrentUser } from "./local-db.js";
+
+/* =========================
+   WELCOME USER
+========================= */
+const userData = getCurrentUserData();
+if (!userData) {
+  window.location.href = "login.html";
+} else {
+  document.getElementById("welcome").innerText =
+    "Welcome " + userData.username + " (" + userData.email + ")";
+}
+
+/* =========================
+   BUTTON WIRING
+========================= */
+document.getElementById("playComputerBtn").addEventListener("click", () => {
+  window.location.href = "computer.html";
+});
+
+document.getElementById("createRoomBtn").addEventListener("click", () => {
+  window.location.href = "create-room.html";
+});
+
+document.getElementById("joinRoomBtn").addEventListener("click", () => {
+  const id = document.getElementById("roomInput").value;
+
+  if (!id) {
+    alert("Enter Room ID");
+    return;
+  }
+
+  window.location.href = "chess.html?room=" + id;
+});
+
+document.getElementById("findMatchBtn").addEventListener("click", () => {
+  if (window.findMatch) {
+    window.findMatch();
+  } else {
+    alert("Matchmaking not loaded");
+  }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  setCurrentUser(null);
+  sessionStorage.clear();
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

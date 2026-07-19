@@ -1,0 +1,119 @@
+/* ============================================================
+   Chess board + clocks (Lichess-inspired)
+   ============================================================ */
+
+.board-wrap { display: flex; flex-direction: column; gap: 8px; max-width: 560px; }
+
+/* Player bar above/below the board */
+.player-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  background: var(--surface-strong); border: 1px solid var(--border);
+}
+.player-bar .avatar-sm { width: 40px; height: 40px; }
+.player-bar .pname { font-weight: 700; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.player-bar .prating { color: var(--text-dim); font-size: 0.85rem; }
+.player-bar.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.player-bar.flip { flex-direction: row-reverse; }
+.player-bar.flip .pname { text-align: right; }
+
+/* Clocks */
+.clock {
+  font-family: "JetBrains Mono", monospace; font-weight: 800;
+  font-size: 1.6rem; padding: 4px 12px; border-radius: 8px;
+  background: var(--bg-2); min-width: 96px; text-align: center;
+}
+.clock.running { color: var(--green); }
+.clock.low { color: var(--red); }
+.clock.flash { animation: clockFlash 1s steps(2, start) infinite; }
+@keyframes clockFlash { 50% { opacity: 0.35; } }
+
+/* The board */
+#chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 560px; height: 560px; max-width: 92vw;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px; overflow: hidden; box-shadow: var(--shadow);
+  position: relative;
+}
+.sq {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  font-size: 46px; user-select: none; cursor: pointer;
+}
+.sq.light { background: #eef0d8; }
+.sq.dark { background: #779556; }
+[data-theme="light"] .sq.light { background: #f0e9d6; }
+.sq:hover { filter: brightness(1.05); }
+.sq .piece {
+  width: 88%; height: 88%;
+  background-size: contain; background-repeat: no-repeat; background-position: center;
+  transition: transform 0.12s ease;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+}
+.sq.selectable { box-shadow: inset 0 0 0 5px rgba(106,169,255,0.7); cursor: pointer; }
+.sq.lastmove::after {
+  content: ""; position: absolute; inset: 0;
+  background: rgba(255, 214, 102, 0.45); border-radius: 4px;
+}
+.sq.check .piece { animation: checkPulse 0.6s ease infinite; }
+@keyframes checkPulse { 50% { filter: drop-shadow(0 0 8px var(--red)); } }
+
+/* Captured pieces tray */
+.captured {
+  display: flex; gap: 4px; flex-wrap: wrap; min-height: 28px;
+  font-size: 22px; color: var(--text-dim);
+}
+.captured .cap-piece { width: 26px; height: 26px; background-size: contain; background-repeat: no-repeat; }
+
+/* Move list */
+.movelist {
+  max-height: 320px; overflow-y: auto; font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem; padding: 6px;
+}
+.movelist .row { display: grid; grid-template-columns: 32px 1fr 1fr; gap: 6px; padding: 2px 0; }
+.movelist .num { color: var(--text-dim); }
+.movelist .mv.active { background: var(--surface-strong); border-radius: 4px; }
+
+/* Promotion popup */
+.promo-pop {
+  position: absolute; inset: 0; display: none;
+  background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 20;
+}
+.promo-pop.show { display: flex; }
+.promo-choices { display: flex; gap: 8px; background: var(--bg-2); padding: 14px; border-radius: 12px; }
+.promo-choices .pc { width: 56px; height: 56px; background-size: contain; cursor: pointer; border-radius: 8px; border: 2px solid var(--border); }
+.promo-choices .pc:hover { border-color: var(--accent); }
+
+/* Game over banner */
+.gameover {
+  position: absolute; inset: 0; display: none; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  background: rgba(8,10,14,0.82); color: #fff; z-index: 30; animation: fadeIn 0.4s;
+}
+.gameover.show { display: flex; }
+.gameover .result { font-size: 2rem; font-weight: 800; }
+
+/* Draw offer popup */
+.draw-pop {
+  position: absolute; inset: 0; display: none;
+  background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 25;
+}
+.draw-pop.show { display: flex; }
+.draw-card {
+  background: var(--bg-2); padding: 18px 20px; border-radius: 12px;
+  border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow);
+}
+.draw-title { font-weight: 700; margin-bottom: 14px; }
+.draw-title .draw-from { color: var(--accent); }
+.draw-actions { display: flex; gap: 10px; justify-content: center; }
+
+/* Coordinates */
+.coord-file, .coord-rank { position: absolute; font-size: 11px; font-weight: 700; color: rgba(0,0,0,0.55); pointer-events: none; }
+.sq.dark .coord-file, .sq.dark .coord-rank { color: rgba(255,255,255,0.7); }
+
+@media (max-width: 880px) {
+  #chessboard { font-size: 36px; }
+  .clock { font-size: 1.2rem; min-width: 76px; }
+}

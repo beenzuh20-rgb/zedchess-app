@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Wallet · ZedChess{% endblock %}
+{% block content %}
+<section class="content grid grid-3">
+  <div class="card">
+    <div class="text-dim">Available Balance</div>
+    <h2 class="text-gold"><i class="fa-solid fa-coins"></i> {{ '%.2f'|format(wallet.balance) }}</h2>
+  </div>
+  <div class="card">
+    <div class="text-dim">Locked in Pots</div>
+    <h2 style="color:var(--accent);">{{ '%.2f'|format(wallet.locked) }}</h2>
+  </div>
+  <div class="card">
+    <div class="text-dim">Total Earned</div>
+    <h2 class="text-gold">{{ '%.2f'|format(wallet.total_earned) }}</h2>
+  </div>
+</section>
+
+<section class="content grid" style="grid-template-columns:1fr 1fr; gap:18px; align-items:start;">
+  <div class="card">
+    <div class="section-title"><i class="fa-solid fa-arrow-down"></i> Deposit</div>
+    <form method="POST" action="{{ url_for('wallet.do_deposit') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+      <button class="btn btn-primary" type="submit">Deposit</button>
+    </form>
+    <div class="section-title"><i class="fa-solid fa-arrow-up"></i> Withdraw</div>
+    <form method="POST" action="{{ url_for('wallet.do_withdraw') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="number" step="0.01" name="amount" placeholder="Amount" required>
+      <button class="btn btn-gold" type="submit">Request Withdrawal</button>
+    </form>
+    {% if pending %}
+      <p class="text-dim" style="margin-top:10px;">Pending withdrawals: {{ pending|length }}</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="section-title"><i class="fa-solid fa-receipt"></i> Transaction History</div>
+    <table class="table">
+      <thead><tr><th>Type</th><th>Amount</th><th>Status</th><th>When</th></tr></thead>
+      <tbody>
+      {% for t in transactions %}
+        <tr>
+          <td>{{ t.kind }}</td>
+          <td class="{% if t.amount >= 0 %}text-gold{% else %}text-dim{% endif %}">{{ '%.2f'|format(t.amount) }}</td>
+          <td><span class="badge {% if t.status=='pending' %}badge-offline{% else %}badge-online{% endif %}">{{ t.status }}</span></td>
+          <td class="text-dim">{{ t.created_at.strftime('%m-%d %H:%M') }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="text-dim">No transactions.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

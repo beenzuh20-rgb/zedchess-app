@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="content error-page">
+  <h1>500</h1>
+  <p class="text-dim">Something went wrong on our side. Check the logs.</p>
+  <a href="{{ url_for('home.index') }}" class="btn btn-primary">Go Home</a>
+</section>
+{% endblock %}

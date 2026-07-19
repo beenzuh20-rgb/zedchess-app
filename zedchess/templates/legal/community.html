@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Community Guidelines · ZedChess{% endblock %}
+{% block content %}
+<section class="content" style="max-width:820px;">
+  <div class="card">
+    <div class="section-title"><i class="fa-solid fa-users"></i> Community Guidelines</div>
+    <p class="text-dim">Last updated: {{ now.year if now else "2026" }}</p>
+
+    <h3>Be Respectful</h3>
+    <p>Treat other players with respect in chat, messages, and challenges. Harassment, hate speech, discrimination, and threats are not tolerated.</p>
+
+    <h3>No Cheating</h3>
+    <p>Engine assistance, shared accounts, move/clock manipulation, and collusion undermine fair play and are prohibited. Violations lead to forfeit and bans.</p>
+
+    <h3>Play Fair, Bet Responsibly</h3>
+    <p>Betting is for entertainment. Only stake what you can afford to lose, and never pressure others to wager. Underage betting is forbidden.</p>
+
+    <h3>Appropriate Content</h3>
+    <p>Do not post spam, scams, sexually explicit, violent, or illegal content. Avatars and bios should remain appropriate for all ages.</p>
+
+    <h3>Reporting</h3>
+    <p>Use block/mute to manage unwanted contact, and report serious abuse to the administrators. False reports may themselves be actioned.</p>
+
+    <h3>Consequences</h3>
+    <p>Breaches may result in a warning, mute, suspension, balance adjustment, or a permanent ban at the discretion of the operators.</p>
+
+    <p style="margin-top:18px;"><a href="{{ url_for('legal.terms') }}">Terms of Service</a> · <a href="{{ url_for('legal.privacy') }}">Privacy Policy</a></p>
+  </div>
+</section>
+{% endblock %}

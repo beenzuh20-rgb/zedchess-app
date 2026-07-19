@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Lobby · ZedChess{% endblock %}
+{% block head %}
+<script>window.ZC_USER_ID = {{ current_user.id }};</script>
+{% endblock %}
+{% block content %}
+<section class="content grid" style="grid-template-columns: 1.6fr 1fr; align-items:start;">
+  <!-- Left: create + challenges -->
+  <div>
+    <div class="card">
+      <div class="section-title"><i class="fa-solid fa-plus"></i> Create Challenge</div>
+      <div class="grid grid-2">
+        <div class="field">
+          <label>Time Control</label>
+          <select id="tcSelect">
+            <optgroup label="Bullet"><option>1+0</option><option>2+1</option><option>3+0</option></optgroup>
+            <optgroup label="Blitz"><option>3+2</option><option selected>5+0</option><option>5+3</option><option>10+0</option></optgroup>
+            <optgroup label="Rapid"><option>10+5</option><option>15+10</option><option>30+0</option></optgroup>
+            <optgroup label="Classical"><option>30+20</option><option>45+45</option><option>60+30</option></optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label>Stake</label>
+          <select id="stakeInput">
+            <option value="0">Casual (no stake)</option>
+            <option value="5">K5</option>
+            <option value="10">K10</option>
+            <option value="20">K20</option>
+            <option value="50">K50</option>
+            <option value="100">K100</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Challenge a specific player (optional)</label>
+        <input id="opponentInput" placeholder="username — leave blank for open challenge">
+      </div>
+      <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" id="ratedCheck" checked style="width:auto;"> Rated game (affects Elo)</label>
+      <button class="btn btn-primary" data-create-challenge style="width:100%;margin-top:10px;"><i class="fa-solid fa-paper-plane"></i> Send Challenge</button>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <div class="section-title"><i class="fa-solid fa-swords"></i> Open Challenges</div>
+      <div id="challengeList" class="grid" style="gap:10px;">
+        <div class="text-dim">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: online + chat -->
+  <div>
+    <div class="card">
+      <div class="section-title"><i class="fa-solid fa-circle"></i> Online Players</div>
+      <div id="onlineList" style="max-height:220px;overflow-y:auto;"></div>
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <div class="section-title"><i class="fa-solid fa-comments"></i> Lobby Chat</div>
+      <div id="chatLog" class="chat-log"></div>
+      <input id="chatInput" placeholder="Type a message…" style="margin-top:8px;">
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <div class="section-title"><i class="fa-solid fa-magnifying-glass"></i> Search Players</div>
+      <input id="playerSearch" placeholder="Search by username…">
+      <a href="{{ url_for('lobby.search') }}" class="btn btn-ghost btn-sm" style="margin-top:8px;">Advanced search</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/lobby.js') }}"></script>
+{% endblock %}

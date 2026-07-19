@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Sign Up · ZedChess{% endblock %}
+{% block content %}
+<section class="content" style="max-width:420px;">
+  <div class="card fade-in">
+    <div style="text-align:center; margin-bottom:18px;">
+      <img class="site-logo auth-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="ZedChess">
+    </div>
+    <h2><i class="fa-solid fa-user-plus"></i> Create Account</h2>
+    <form method="POST" action="{{ url_for('auth.register') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label>Username</label>
+        <input name="username" required minlength="3" maxlength="20" placeholder="3–20 chars, letters/numbers/_">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" required minlength="6" placeholder="At least 6 characters">
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm" required>
+      </div>
+      <label class="terms-check" style="display:flex;gap:8px;align-items:flex-start;margin:6px 0 12px;">
+        <input type="checkbox" name="terms" value="on" required style="width:auto;margin-top:3px;">
+        <span class="text-dim" style="font-size:0.85rem;">
+          I have read and accept the
+          <a href="{{ url_for('legal.terms') }}" target="_blank" rel="noopener">Terms of Service</a>,
+          <a href="{{ url_for('legal.privacy') }}" target="_blank" rel="noopener">Privacy Policy</a>, and
+          <a href="{{ url_for('legal.community') }}" target="_blank" rel="noopener">Community Guidelines</a>.
+        </span>
+      </label>
+      <button class="btn btn-primary" type="submit" style="width:100%;">Create Account</button>
+    </form>
+    <p class="text-dim" style="margin-top:14px;">Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+  </div>
+</section>
+{% endblock %}

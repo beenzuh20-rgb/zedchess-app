@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Play vs Computer</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+</head>
+
+<body>
+
+<h1>🤖 Play vs Computer</h1>
+<h3 id="status">Your move</h3>
+
+<div id="board"></div>
+
+<script>
+
+let game = new Chess();
+let selected = null;
+
+/* =========================
+   PIECES
+========================= */
+const pieces = {
+  p:"♟", r:"♜", n:"♞", b:"♝", q:"♛", k:"♚",
+  P:"♙", R:"♖", N:"♘", B:"♗", Q:"♕", K:"♔"
+};
+
+/* =========================
+   RENDER BOARD
+========================= */
+function renderBoard(){
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+
+  const b = game.board();
+
+  for(let r = 0; r < 8; r++){
+    for(let c = 0; c < 8; c++){
+
+      let sq = document.createElement("div");
+      sq.className = ((r + c) % 2 === 0) ? "square white" : "square black";
+
+      let piece = b[r][c];
+
+      if(piece){
+        let span = document.createElement("span");
+
+        let key = piece.color === "w"
+          ? piece.type.toUpperCase()
+          : piece.type.toLowerCase();
+
+        span.innerText = pieces[key];
+        sq.appendChild(span);
+      }
+
+      let file = String.fromCharCode(97 + c);
+      let rank = 8 - r;
+      let square = file + rank;
+
+      sq.onclick = () => handleClick(square);
+
+      board.appendChild(sq);
+    }
+  }
+}
+
+/* =========================
+   CLICK LOGIC (DEBUG FIXED)
+========================= */
+function handleClick(square){
+
+  console.log("Clicked:", square);
+
+  if(!selected){
+    selected = square;
+    document.getElementById("status").innerText = "Selected: " + square;
+    return;
+  }
+
+  let move = game.move({
+    from: selected,
+    to: square,
+    promotion: "q"
+  });
+
+  console.log("Move result:", move);
+
+  selected = null;
+
+  if(!move){
+    document.getElementById("status").innerText =
+      "❌ Illegal move. Try again.";
+
+    renderBoard();
+    return;
+  }
+
+  document.getElementById("status").innerText = "Computer thinking...";
+
+  renderBoard();
+
+  setTimeout(computerMove, 500);
+}
+
+/* =========================
+   COMPUTER MOVE
+========================= */
+function computerMove(){
+
+  let moves = game.moves();
+
+  if(moves.length === 0){
+    document.getElementById("status").innerText = "Game Over";
+    return;
+  }
+
+  let move = moves[Math.floor(Math.random() * moves.length)];
+  game.move(move);
+
+  document.getElementById("status").innerText = "Your move";
+
+  renderBoard();
+}
+
+/* =========================
+   START
+========================= */
+renderBoard();
+
+</script>
+
+</body>
+</html>

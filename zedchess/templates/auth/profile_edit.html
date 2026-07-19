@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<section class="content" style="max-width:480px;">
+  <div class="card fade-in">
+    <h2><i class="fa-solid fa-user-pen"></i> Edit Profile</h2>
+    <form method="POST" action="{{ url_for('auth.profile_edit') }}" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div style="text-align:center;margin-bottom:12px;">
+        <img class="avatar-sm" style="width:90px;height:90px;" src="{{ user.avatar or url_for('static', filename='img/default-avatar.svg') }}">
+      </div>
+      <div class="field">
+        <label>Avatar</label>
+        <input type="file" name="avatar" accept="image/*">
+      </div>
+      <div class="field">
+        <label>Bio</label>
+        <textarea name="bio" maxlength="280" rows="3" placeholder="Tell us about you">{{ user.bio or '' }}</textarea>
+      </div>
+      <div class="field">
+        <label>Country (code)</label>
+        <input name="country" maxlength="8" value="{{ user.country or '' }}" placeholder="e.g. US">
+      </div>
+      <button class="btn btn-primary" type="submit" style="width:100%;">Save Changes</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

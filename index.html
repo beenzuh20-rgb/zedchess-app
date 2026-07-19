@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ZedChess</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<script src="service-worker-cleanup.js"></script>
+
+<div class="container">
+
+<h1>♟️ ZedChess</h1>
+
+<p>Play Chess Online Against Real Players</p>
+
+<a href="signup.html">
+<button>Sign Up</button>
+</a>
+
+<a href="login.html">
+<button>Login</button>
+</a>
+
+</div>
+
+<!-- Terms Button -->
+<button onclick="openTerms()" style="margin:10px; padding:8px 12px; cursor:pointer;">
+    Terms & Conditions
+</button>
+
+<!-- Terms Box -->
+<div id="termsBox" style="
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%, -50%);
+background:#111;
+color:white;
+padding:20px;
+width:80%;
+max-width:500px;
+border:1px solid #555;
+z-index:999;
+">
+
+<h2>Terms & Conditions</h2>
+
+<p>By using ZedChess, you agree that:</p>
+
+<ul>
+<li>This game is for entertainment purposes only.</li>
+<li>No cheating or modifying game rules unfairly.</li>
+<li>Timer-based losses are final.</li>
+<li>We are not responsible for lost progress or data.</li>
+<li>All gameplay is governed by chess rules (chess.js engine).</li>
+</ul>
+
+<button onclick="closeTerms()" style="margin-top:10px; padding:6px 10px;">
+Close
+</button>
+
+</div>
+
+<script>
+function openTerms(){
+    document.getElementById("termsBox").style.display = "block";
+}
+
+function closeTerms(){
+    document.getElementById("termsBox").style.display = "none";
+}
+</script>
+
+</body>
+</html>

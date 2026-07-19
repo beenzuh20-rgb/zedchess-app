@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}ZedChess — Play Chess & Bet{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-inner fade-in">
+    <div class="hero-logo-col">
+      <img class="site-logo hero-logo" src="{{ url_for('static', filename='images/logo.png') }}" alt="ZedChess">
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">♟ Live Chess · Betting · Elo Ranking</div>
+      <h1 class="hero-title">Play Chess.<br><span class="grad">Win Real Stakes.</span></h1>
+      <p class="hero-sub">Join thousands of players in real-time bullet, blitz, rapid & classical games. Stake coins, climb the leaderboard, and cash out your winnings.</p>
+      <div class="hero-actions">
+        {% if authenticated %}
+          <a href="{{ url_for('lobby.index') }}" class="btn btn-primary btn-lg"><i class="fa-solid fa-play"></i> Play Now</a>
+          <a href="{{ url_for('home.leaderboard_page') }}" class="btn btn-ghost btn-lg">Leaderboard</a>
+        {% else %}
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg"><i class="fa-solid fa-user-plus"></i> Sign Up Free</a>
+          <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-lg">Login</a>
+        {% endif %}
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><b>{{ online_count }}</b><span>Online now</span></div>
+        <div class="hstat"><b>{{ active_challenges }}</b><span>Open challenges</span></div>
+        <div class="hstat"><b>{{ leaderboard|length }}</b><span>Top players</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if announcement %}
+<section class="content"><div class="flash flash-info"><i class="fa-solid fa-bullhorn"></i> {{ announcement }}</div></section>
+{% endif %}
+
+<section class="content grid grid-3">
+  <div class="card">
+    <h3><i class="fa-solid fa-bolt"></i> Real-time Play</h3>
+    <p class="text-dim">Server-authoritative chess clocks and move validation via Socket.IO + python-chess.</p>
+  </div>
+  <div class="card">
+    <h3><i class="fa-solid fa-coins"></i> Skill-based Betting</h3>
+    <p class="text-dim">Stake K5–K100 or custom. Winner takes the pot minus a configurable platform fee.</p>
+  </div>
+  <div class="card">
+    <h3><i class="fa-solid fa-chart-line"></i> Elo & Leaderboards</h3>
+    <p class="text-dim">True Elo ratings, weekly & monthly leaderboards, and a personal rating graph.</p>
+  </div>
+</section>
+
+<section class="content">
+  <div class="section-title"><i class="fa-solid fa-trophy"></i> Global Leaderboard</div>
+  <div class="card">
+    <table class="table">
+      <thead><tr><th>#</th><th>Player</th><th>Rating</th><th>W/L/D</th></tr></thead>
+      <tbody>
+      {% for u in leaderboard %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td><a href="{{ url_for('auth.profile', username=u.username) }}">{{ u.username }}</a></td>
+          <td class="text-gold">{{ u.rating|int }}</td>
+          <td class="text-dim">{{ u.wins }}/{{ u.losses }}/{{ u.draws }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="content">
+  <div class="section-title"><i class="fa-solid fa-crown"></i> Recent Winners</div>
+  <div class="grid grid-3">
+    {% for g in recent_winners %}
+      <div class="card">
+        {% set winner = g.white_player if g.result == 'white' else g.black_player %}
+        <strong>{{ winner.username if winner else 'Unknown' }}</strong>
+        <span class="badge badge-rated">{{ g.time_control }}</span>
+        <div class="text-dim">stake K{{ g.stake }}</div>
+      </div>
+    {% else %}
+      <div class="card text-dim">No completed games yet.</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Admin · Users{% endblock %}
+{% block content %}
+<section class="content">
+  <div class="card">
+    <form method="GET" action="{{ url_for('admin.users') }}" style="margin-bottom:12px;">
+      <input name="q" value="{{ q }}" placeholder="Search username…">
+      <button class="btn btn-primary btn-sm" type="submit">Search</button>
+    </form>
+    <table class="table">
+      <thead><tr><th>User</th><th>Rating</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td><a href="{{ url_for('auth.profile', username=u.username) }}">{{ u.username }}</a>{% if u.is_admin %} <span class="badge badge-rated">admin</span>{% endif %}</td>
+          <td>{{ u.rating|int }}</td>
+          <td class="text-gold">{{ '%.2f'|format(u.balance) }}</td>
+          <td>
+            {% if u.is_banned %}<span class="badge badge-offline">banned</span>
+            {% elif not u.is_active %}<span class="badge badge-offline">suspended</span>
+            {% else %}<span class="badge badge-online">active</span>{% endif %}
+          </td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap;">
+            {% if not u.is_admin %}
+            <form method="POST" action="{{ url_for('admin.suspend', user_id=u.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm">Suspend</button></form>
+            <form method="POST" action="{{ url_for('admin.ban', user_id=u.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-danger">Ban</button></form>
+            {% endif %}
+            <form method="POST" action="{{ url_for('admin.adjust', user_id=u.id) }}" style="display:flex;gap:4px;">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="number" step="0.01" name="delta" placeholder="±" style="width:90px;">
+              <button class="btn btn-sm btn-gold">Adjust</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

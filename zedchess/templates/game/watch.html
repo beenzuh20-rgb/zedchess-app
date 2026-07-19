@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Watch · ZedChess{% endblock %}
+{% block head %}
+<script>
+  window.ZC_ROOM_ID = "{{ room_id }}";
+  window.ZC_MY_COLOR = "spectator";
+  window.ZC_USER_ID = {{ current_user.id }};
+</script>
+{% endblock %}
+{% block content %}
+<section class="content" style="display:flex;gap:24px;align-items:start;">
+  <div>
+    <div class="player-bar"><span class="pname">{{ game.black_player.username if game.black_player else 'Black' }}</span><div class="clock" id="blackClock">0:00</div></div>
+    <div class="board-wrap"><div id="chessboard"></div></div>
+    <div class="player-bar"><span class="pname">{{ game.white_player.username if game.white_player else 'White' }}</span><div class="clock" id="whiteClock">0:00</div></div>
+  </div>
+  <div class="card"><div class="section-title">Moves</div><div class="movelist" id="movelist"></div></div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

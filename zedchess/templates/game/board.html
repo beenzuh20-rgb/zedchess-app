@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Game · ZedChess{% endblock %}
+{% block head %}
+<script>
+  window.ZC_ROOM_ID = "{{ room_id }}";
+  window.ZC_MY_COLOR = "{{ 'white' if game.white_id == current_user.id else ('black' if game.black_id == current_user.id else 'spectator') }}";
+  window.ZC_USER_ID = {{ current_user.id }};
+</script>
+{% endblock %}
+{% block content %}
+<section class="content game-layout">
+
+  <!-- Board column -->
+  <div>
+    <!-- Black player bar -->
+    <div class="player-bar" id="barBlack">
+      <img class="avatar-sm" src="{{ (game.black_player.avatar) or url_for('static', filename='img/default-avatar.svg') }}">
+      <div>
+        <div class="pname" id="blackName">{{ game.black_player.username if game.black_player else 'Waiting…' }}</div>
+        <div class="prating">{{ game.black_player.rating|int if game.black_player else '' }}</div>
+      </div>
+      <div class="clock" id="blackClock">0:00</div>
+    </div>
+
+    <div class="board-wrap">
+      <div id="chessboard"></div>
+      <div class="promo-pop" id="promoPop">
+        <div class="promo-choices">
+          <div class="pc" data-piece="q" style="color:#fff;">♕</div>
+          <div class="pc" data-piece="r" style="color:#fff;">♖</div>
+          <div class="pc" data-piece="b" style="color:#fff;">♗</div>
+          <div class="pc" data-piece="n" style="color:#fff;">♘</div>
+        </div>
+      </div>
+      <div class="gameover" id="gameover">
+        <div class="result">Game Over</div>
+        <a href="{{ url_for('lobby.index') }}" class="btn btn-primary">Back to Lobby</a>
+      </div>
+      <div class="draw-pop" id="drawPop">
+        <div class="draw-card">
+          <div class="draw-title"><span class="draw-from">Opponent</span> offered a draw</div>
+          <div class="draw-actions">
+            <button class="btn btn-primary btn-sm" data-draw="accept">Accept</button>
+            <button class="btn btn-ghost btn-sm" data-draw="decline">Decline</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- White player bar -->
+    <div class="player-bar" id="barWhite">
+      <img class="avatar-sm" src="{{ (game.white_player.avatar) or url_for('static', filename='img/default-avatar.svg') }}">
+      <div>
+        <div class="pname" id="whiteName">{{ game.white_player.username if game.white_player else 'Waiting…' }}</div>
+        <div class="prating">{{ game.white_player.rating|int if game.white_player else '' }}</div>
+      </div>
+      <div class="clock" id="whiteClock">0:00</div>
+    </div>
+
+    <div class="game-controls">
+      <button class="btn btn-ghost btn-sm" id="flipBtn"><i class="fa-solid fa-rotate"></i> Flip</button>
+      <button class="btn btn-ghost btn-sm" id="drawBtn"><i class="fa-solid fa-handshake"></i> Draw</button>
+      <button class="btn btn-danger btn-sm" id="resignBtn"><i class="fa-solid fa-flag"></i> Resign</button>
+      {% if game.stake %}<span class="badge badge-rated">Stake K{{ game.stake }}{% if game.rated %} · Rated{% endif %}</span>{% endif %}
+    </div>
+  </div>
+
+  <!-- Side column: moves + chat -->
+  <div>
+    <div class="card">
+      <div class="section-title"><i class="fa-solid fa-list"></i> Moves</div>
+      <div class="movelist" id="movelist"></div>
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <div class="section-title"><i class="fa-solid fa-comments"></i> Game Chat</div>
+      <div id="gameChatLog" class="chat-log"></div>
+      <input id="gameChatInput" placeholder="Message…">
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

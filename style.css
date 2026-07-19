@@ -1,0 +1,175 @@
+/* =========================
+   GLOBAL
+========================= */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #1f1f1f;
+  color: white;
+  text-align: center;
+}
+
+/* =========================
+   CONTAINER (LOGIN / LOBBY)
+========================= */
+.container {
+  width: 90%;
+  max-width: 420px;
+  margin: 60px auto;
+  background: rgba(255,255,255,0.06);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* =========================
+   INPUTS & BUTTONS
+========================= */
+input {
+  width: 90%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: white;
+}
+
+button {
+  width: 95%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #4cafef;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #3b9ae0;
+}
+
+/* =========================
+   HEADINGS
+========================= */
+h1, h2, h3 {
+  margin: 8px 0;
+}
+
+/* =========================
+   PLAYERS + INFO BAR
+========================= */
+#players, #topBar {
+  display: flex;
+  justify-content: space-around;
+  width: 480px;
+  margin: 10px auto;
+  background: rgba(255,255,255,0.05);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* =========================
+   BOARD (Lichess style base)
+========================= */
+#board {
+  display: grid;
+  grid-template-columns: repeat(8, 60px);
+  grid-template-rows: repeat(8, 60px);
+  width: 480px;
+  height: 480px;
+  margin: 20px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+/* =========================
+   SQUARES
+========================= */
+.square {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  user-select: none;
+  transition: 0.15s ease;
+}
+
+.white {
+  background: #f0d9b5;
+}
+
+.black {
+  background: #b58863;
+}
+
+/* hover effect */
+.square:hover {
+  outline: 2px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+}
+
+/* =========================
+   PIECES (Lichess-like clean look)
+========================= */
+.square span {
+  font-size: 40px;
+  transition: transform 0.15s ease;
+}
+
+.square span:hover {
+  transform: scale(1.15);
+}
+
+/* white pieces */
+.white-piece {
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* black pieces */
+.black-piece {
+  color: #111111;
+  text-shadow: 0 0 2px rgba(255,255,255,0.25);
+}
+
+/* =========================
+   MOVE HIGHLIGHTS (future use)
+========================= */
+.selected {
+  outline: 3px solid yellow;
+}
+
+.highlight {
+  background: rgba(0, 255, 0, 0.25) !important;
+}
+
+/* =========================
+   CAPTURED PIECES
+========================= */
+#whiteCaptured, #blackCaptured {
+  font-size: 22px;
+  min-height: 30px;
+  letter-spacing: 2px;
+}
+
+/* =========================
+   TERMS POPUP
+========================= */
+#termsBox {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  z-index: 999;
+}

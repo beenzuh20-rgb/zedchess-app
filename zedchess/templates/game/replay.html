@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Replay · ZedChess{% endblock %}
+{% block head %}<script>window.ZC_ROOM_ID = "{{ room_id }}"; window.ZC_MY_COLOR = "spectator"; window.ZC_USER_ID = {{ current_user.id }};</script>{% endblock %}
+{% block content %}
+<section class="content" style="display:flex;gap:24px;align-items:start;">
+  <div>
+    <h3>Replay — {{ game.time_control }} · stake K{{ game.stake }}</h3>
+    <div class="board-wrap"><div id="chessboard"></div></div>
+  </div>
+  <div class="card" style="min-width:280px;">
+    <div class="section-title">Moves</div>
+    <div class="movelist" id="movelist"></div>
+    <p class="text-dim">Result: <b>{{ game.result or '—' }}</b> ({{ game.termination or '—' }})</p>
+    <p class="text-dim">PGN:</p>
+    <textarea readonly rows="6" style="font-size:0.75rem;">{{ game.pgn or '' }}</textarea>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/board.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

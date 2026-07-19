@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Admin · Games{% endblock %}
+{% block content %}
+<section class="content">
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <a href="?status=active" class="btn btn-sm {% if status=='active' %}btn-primary{% else %}btn-ghost{% endif %}">Active</a>
+      <a href="?status=waiting" class="btn btn-sm {% if status=='waiting' %}btn-primary{% else %}btn-ghost{% endif %}">Waiting</a>
+      <a href="?status=finished" class="btn btn-sm {% if status=='finished' %}btn-primary{% else %}btn-ghost{% endif %}">Finished</a>
+      <a href="?status=aborted" class="btn btn-sm {% if status=='aborted' %}btn-primary{% else %}btn-ghost{% endif %}">Aborted</a>
+    </div>
+    <table class="table">
+      <thead><tr><th>Room</th><th>White</th><th>Black</th><th>TC</th><th>Stake</th><th>Result</th><th></th></tr></thead>
+      <tbody>
+      {% for g in games %}
+        <tr>
+          <td class="mono">{{ g.room_id }}</td>
+          <td>{{ g.white_player.username if g.white_player else '—' }}</td>
+          <td>{{ g.black_player.username if g.black_player else '—' }}</td>
+          <td>{{ g.time_control }}</td>
+          <td class="text-gold">K{{ g.stake }}</td>
+          <td>{{ g.result or '—' }}</td>
+          <td><a href="{{ url_for('game.replay', room_id=g.room_id) }}" class="btn btn-sm btn-ghost">Replay</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="text-dim">No games.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

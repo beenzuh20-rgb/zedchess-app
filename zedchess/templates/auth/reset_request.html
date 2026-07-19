@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Reset Password · ZedChess{% endblock %}
+{% block content %}
+<section class="content" style="max-width:420px;">
+  <div class="card fade-in">
+    <h2><i class="fa-solid fa-key"></i> Reset Password</h2>
+    <form method="POST" action="{{ url_for('auth.reset_request') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="you@example.com">
+      </div>
+      <button class="btn btn-primary" type="submit" style="width:100%;">Send reset link</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

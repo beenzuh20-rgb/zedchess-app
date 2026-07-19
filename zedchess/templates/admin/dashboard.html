@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Admin · Dashboard{% endblock %}
+{% block content %}
+<section class="content">
+  <div class="card">
+    <h2><i class="fa-solid fa-shield"></i> Admin Dashboard</h2>
+    <div class="grid grid-3" style="margin-top:12px;">
+      <div><div class="text-dim">Users</div><h2>{{ stats.users }}</h2></div>
+      <div><div class="text-dim">Active Games</div><h2 style="color:var(--green)">{{ stats.active }}</h2></div>
+      <div><div class="text-dim">Finished Games</div><h2>{{ stats.finished }}</h2></div>
+      <div><div class="text-dim">Pending Withdrawals</div><h2 class="text-gold">{{ stats.pending }}</h2></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;">
+      <a href="{{ url_for('admin.users') }}" class="btn btn-sm">Users</a>
+      <a href="{{ url_for('admin.withdrawals') }}" class="btn btn-sm">Withdrawals</a>
+      <a href="{{ url_for('admin.games') }}" class="btn btn-sm">Games</a>
+      <a href="{{ url_for('admin.config') }}" class="btn btn-sm">Config</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;">
+    <div class="section-title"><i class="fa-solid fa-gear"></i> Quick Settings</div>
+    <form method="POST" action="{{ url_for('admin.config') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="grid grid-2">
+        <div class="field"><label>Commission Rate (%)</label>
+          <input type="number" step="0.01" name="commission_rate" value="{{ settings.commission_rate * 100 }}"></div>
+        <div class="field"><label>Disconnect Forfeit (s)</label>
+          <input type="number" name="disconnect_seconds" value="{{ settings.disconnect_forfeit_seconds }}"></div>
+      </div>
+      <div class="field"><label>Default Time Control</label>
+        <input name="default_time_control" value="{{ settings.default_time_control }}"></div>
+      <div class="field"><label>Announcement</label>
+        <textarea name="announcement" rows="2">{{ settings.announcement or '' }}</textarea></div>
+      <label style="display:flex;gap:8px;"><input type="checkbox" name="maintenance" {% if settings.maintenance_mode %}checked{% endif %} style="width:auto;"> Maintenance mode</label>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

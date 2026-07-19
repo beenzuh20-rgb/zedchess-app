@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<script src="service-worker-cleanup.js"></script>
+
+<div class="container">
+
+<h2>Create Account</h2>
+
+<input type="text" id="username" placeholder="Username">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<input type="password" id="confirm" placeholder="Confirm Password">
+
+<label>
+<input type="checkbox" id="terms">
+I accept Terms & Conditions
+</label>
+
+<p id="error" style="color:red;"></p>
+
+<button id="signupBtn">Create Account</button>
+
+<p>
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</div>
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>

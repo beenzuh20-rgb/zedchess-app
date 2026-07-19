@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Terms of Service · ZedChess{% endblock %}
+{% block content %}
+<section class="content" style="max-width:820px;">
+  <div class="card">
+    <div class="section-title"><i class="fa-solid fa-file-contract"></i> Terms of Service</div>
+    <p class="text-dim">Last updated: {{ now.year if now else "2026" }}</p>
+
+    <h3>1. Acceptance of Terms</h3>
+    <p>By creating an account or using ZedChess ("the Service"), you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, do not use the Service.</p>
+
+    <h3>2. Eligibility</h3>
+    <p>You must be at least 18 years old (or the age of majority in your jurisdiction) to participate in betting features. You are responsible for complying with the laws that apply in your location.</p>
+
+    <h3>3. Accounts</h3>
+    <p>You are responsible for keeping your login credentials secure and for all activity under your account. One account per person. Sharing accounts, using multiple accounts, or automating play is prohibited.</p>
+
+    <h3>4. Betting &amp; Wallet</h3>
+    <p>Stakes are locked when a challenge is created. The winner of a completed game receives the pot minus a platform commission configured by the operator. Draws refund both stakes. Games abandoned or lost by timeout are settled according to the result determined by the server. All wallet transactions are final once approved.</p>
+
+    <h3>5. Fair Play</h3>
+    <p>Cheating, engine assistance, move tampering, clock manipulation, and collusion are strictly forbidden and may result in forfeit, balance adjustment, suspension, or a permanent ban. The server is the authoritative source for move legality, timing, and results.</p>
+
+    <h3>6. Termination</h3>
+    <p>We may suspend or terminate accounts that violate these Terms. You may close your account at any time; applicable withdrawal and balance rules still apply.</p>
+
+    <h3>7. Disclaimers</h3>
+    <p>The Service is provided "as is" without warranties. We are not liable for lost progress, connectivity issues, or financial outcomes of betting. Play responsibly.</p>
+
+    <h3>8. Changes</h3>
+    <p>We may update these Terms from time to time. Continued use after changes constitutes acceptance.</p>
+
+    <p style="margin-top:18px;"><a href="{{ url_for('legal.privacy') }}">Privacy Policy</a> · <a href="{{ url_for('legal.community') }}">Community Guidelines</a></p>
+  </div>
+</section>
+{% endblock %}
