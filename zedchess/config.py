@@ -23,10 +23,11 @@ class Config:
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
     # SQLite for development; override with a DATABASE_URL for PostgreSQL.
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL",
-        "sqlite:///" + os.path.join(BASE_DIR, "zedchess.db"),
-    )
+    # Render provides "postgres://..." but SQLAlchemy 1.4+ needs "postgresql://".
+    _db_url = os.environ.get("DATABASE_URL", "sqlite:///" + os.path.join(BASE_DIR, "zedchess.db"))
+    if _db_url and _db_url.startswith("postgres://"):
+        _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_DATABASE_URI = _db_url
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
