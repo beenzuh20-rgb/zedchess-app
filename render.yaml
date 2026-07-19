@@ -2,15 +2,13 @@ services:
   - type: web
     name: zedchess-app
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT wsgi:app
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT wsgi:app"
     envVars:
       - key: FLASK_ENV
         value: production
       - key: SECRET_KEY
         generateValue: true
-      - key: DATABASE_URL
-        value: sqlite:///zedchess.db
       - key: SOCKETIO_ASYNC_MODE
         value: eventlet
       - key: ADMIN_USERNAME
